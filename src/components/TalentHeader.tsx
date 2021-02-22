@@ -1,5 +1,11 @@
 import { FC } from 'react'
 import styled, { css } from 'styled-components'
+import { Button } from './Button'
+
+/**
+ * The breakpoint at which the layout switches to a vertical one.
+ */
+const VERTICAL_BREAKPOINT = 900;
 
 export interface TalentHeaderProps {
   accent?: string
@@ -36,30 +42,37 @@ export const TalentHeader: FC<TalentHeaderProps> = (props) => {
         <h2>{title}</h2>
         <blockquote>{quote}</blockquote>
         <BottomContentContainer>
-          <div>
+          <div style={{
+						flex: 1
+					}}>
             <h3>{pricing.type === 'base' ? 'Starting from' : 'Pricing'}</h3>
             <span>{pricing.amount}</span>
           </div>
-          <div>
-            <button>aasdf</button>
-            <button>aadsf</button>
-          </div>
+          <BottomButtonsContainer>
+            <Button transparent onClick={() => console.log("TODO: Contact talent")}>Contact</Button>
+            <Button accent={accent} onClick={() => console.log("TODO: Hire talent")}>Hire</Button>
+          </BottomButtonsContainer>
         </BottomContentContainer>
       </ContentContainer>
     </TalentHeaderContainer>
   )
 }
 
-const TalentHeaderContainer = styled.div<
-  Pick<TalentHeaderProps, 'background' | 'accent'>
->`
+
+type TalentHeaderContainerProps = Pick<TalentHeaderProps, 'background' | 'accent'>
+
+const TalentHeaderContainer = styled.div<TalentHeaderContainerProps>`
   display: flex;
   flex-direction: row;
-  padding: 150px 50px;
+  padding: 100px 50px;
   padding-bottom: 15px;
   background: linear-gradient(to bottom, #1a1a1aaa, #1a1a1a),
     url('${(props) => props.background}') no-repeat fixed top center;
   background-size: cover;
+
+	@media screen and (max-width: ${VERTICAL_BREAKPOINT}px) {
+		flex-direction: column;
+	}
 `
 
 const TrailerContainer = styled.aside`
@@ -70,6 +83,11 @@ const TrailerContainer = styled.aside`
   align-items: center;
 
   margin-right: 50px;
+
+	@media screen and (max-width: ${VERTICAL_BREAKPOINT}px) {
+		margin-right: 0;
+		margin-bottom: 30px;
+	}
 `
 
 const TrailerThumbnailOverlay = styled.div`
@@ -124,7 +142,11 @@ const TrailerInner = styled.div`
 
   border-radius: 5px;
 
-  border: 3px solid white;
+  border: 1px solid white;
+
+	@media screen and (max-width: ${VERTICAL_BREAKPOINT}px) {
+		width: 100%;
+	}
 `
 
 const ContentContainer = styled.article`
@@ -163,8 +185,21 @@ const ContentContainer = styled.article`
 `
 
 const BottomContentContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+	align-items: center;
+
   margin-top: auto;
   padding-top: 20px;
+
+	@media screen and (max-width: ${VERTICAL_BREAKPOINT}px) {
+		flex-direction: column;
+		align-items: stretch;
+
+		> * {
+			margin-bottom: 8px;
+		}
+	}
 
   h3 {
     font-weight: 400;
@@ -178,4 +213,12 @@ const BottomContentContainer = styled.div`
     font-size: 24px;
     font-weight: 600;
   }
+`
+const BottomButtonsContainer = styled.div`
+	display: flex;
+	flex: 0;
+	flex-direction: row;
+	align-self: stretch;
+	justify-content: center;
+	align-items: center;
 `
