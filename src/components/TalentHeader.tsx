@@ -227,10 +227,14 @@ const BottomContentContainer = styled.div`
   }
 `
 const BottomButtonsContainer = styled.div`
-	display: flex;
-	flex: 0;
-	flex-direction: row;
-	align-self: stretch;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  flex: 1 0;
+  flex-direction: row;
+  align-self: stretch;
+  justify-content: center;
+  align-items: center;
+
+	> * {
+		flex: 0 0;
+	}
 `
