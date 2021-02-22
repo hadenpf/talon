@@ -42,15 +42,27 @@ export const TalentHeader: FC<TalentHeaderProps> = (props) => {
         <h2>{title}</h2>
         <blockquote>{quote}</blockquote>
         <BottomContentContainer>
-          <div style={{
-						flex: 1
-					}}>
+          <div
+            style={{
+              flex: 1,
+            }}
+          >
             <h3>{pricing.type === 'base' ? 'Starting from' : 'Pricing'}</h3>
             <span>{pricing.amount}</span>
           </div>
           <BottomButtonsContainer>
-            <Button transparent onClick={() => console.log("TODO: Contact talent")}>Contact</Button>
-            <Button accent={accent} onClick={() => console.log("TODO: Hire talent")}>Hire</Button>
+            <Button
+              transparent
+              onClick={() => console.log('TODO: Contact talent')}
+            >
+              Contact
+            </Button>
+            <Button
+              accent={accent}
+              onClick={() => console.log('TODO: Hire talent')}
+            >
+              {pricing.type === 'fixed' ? 'Hire' : 'View Pricing'}
+            </Button>
           </BottomButtonsContainer>
         </BottomContentContainer>
       </ContentContainer>
