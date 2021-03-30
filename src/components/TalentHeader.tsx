@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import styled, { css } from 'styled-components'
+import { INSET_MARGIN } from '../helpers/layout';
 import { Button } from './Button'
 
 /**
@@ -10,6 +11,7 @@ const VERTICAL_BREAKPOINT = 900;
 export interface TalentHeaderProps {
   accent?: string
   background?: string
+	id: number
   name: string
   title: string
   quote: string
@@ -24,7 +26,9 @@ export interface TalentHeaderProps {
 }
 
 export const TalentHeader: FC<TalentHeaderProps> = (props) => {
-  const { accent, background, name, title, quote, trailer, pricing } = props
+  const { accent, background, id, name, title, quote, trailer, pricing } = props
+
+console.log({accent})	
 
   return (
     <TalentHeaderContainer background={background} accent={accent}>
@@ -32,7 +36,9 @@ export const TalentHeader: FC<TalentHeaderProps> = (props) => {
         <TrailerInner>
           <TrailerThumbnail image={trailer.thumbnail}>
             <TrailerThumbnailOverlay>
-              <button>Play Trailer</button>
+              <Button square round>
+								&raquo;
+							</Button>
             </TrailerThumbnailOverlay>
           </TrailerThumbnail>
         </TrailerInner>
@@ -44,7 +50,7 @@ export const TalentHeader: FC<TalentHeaderProps> = (props) => {
         <BottomContentContainer>
           <div
             style={{
-              flex: 1,
+              flexGrow: 1,
             }}
           >
             <h3>{pricing.type === 'base' ? 'Starting from' : 'Pricing'}</h3>
@@ -53,13 +59,16 @@ export const TalentHeader: FC<TalentHeaderProps> = (props) => {
           <BottomButtonsContainer>
             <Button
               transparent
-              onClick={() => console.log('TODO: Contact talent')}
+							href="/talent/[id]/contact"
+							as={`/talent/${id}/contact`}
             >
               Contact
             </Button>
             <Button
               accent={accent}
-              onClick={() => console.log('TODO: Hire talent')}
+							transparent={false}
+              href="/talent/[id]/pricing"
+							as={`/talent/${id}/pricing`}
             >
               {pricing.type === 'fixed' ? 'Hire' : 'View Pricing'}
             </Button>
@@ -70,13 +79,12 @@ export const TalentHeader: FC<TalentHeaderProps> = (props) => {
   )
 }
 
-
 type TalentHeaderContainerProps = Pick<TalentHeaderProps, 'background' | 'accent'>
 
 const TalentHeaderContainer = styled.div<TalentHeaderContainerProps>`
   display: flex;
   flex-direction: row;
-  padding: 100px 50px;
+  padding: 100px ${INSET_MARGIN}px;
   padding-bottom: 15px;
   background: linear-gradient(to bottom, #1a1a1aaa, #1a1a1a),
     url('${(props) => props.background}') no-repeat fixed top center;
@@ -134,6 +142,8 @@ const TrailerThumbnail = styled.div<{ image: string }>`
 
   background: url('${(props) => props.image}') center center;
   background-size: cover;
+
+	cursor: pointer;
 
   &:hover {
     ${TrailerThumbnailOverlay} {
@@ -228,13 +238,20 @@ const BottomContentContainer = styled.div`
 `
 const BottomButtonsContainer = styled.div`
   display: flex;
-  flex: 1 0;
+  flex-grow: 0;
+  flex-shrink: 0;
   flex-direction: row;
   align-self: stretch;
   justify-content: center;
   align-items: center;
 
-	> * {
-		flex: 0 0;
+	@media screen and (max-width: ${VERTICAL_BREAKPOINT}px) {
+		margin-top: 20px;
+		flex-direction: column-reverse;
+
+		> * {
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
 	}
 `

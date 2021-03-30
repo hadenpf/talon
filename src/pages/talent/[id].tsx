@@ -1,9 +1,10 @@
 import { Suspense, useEffect, useState } from 'react'
 import { GetServerSideProps, NextPage } from 'next'
-import { TalentHeader } from '../../../components/TalentHeader'
-import { supabase } from '../../../helpers/supabase'
+import { TalentHeader } from '../../components/TalentHeader'
+import { supabase } from '../../helpers/supabase'
 import { useRouter } from 'next/dist/client/router'
-import { Talent } from '../../../helpers/data/talent'
+import { Talent } from '../../helpers/data/talent'
+import { PageContainer } from '../../components/PageContainer'
 
 interface TalentPageProps {
   talent: Talent
@@ -18,8 +19,9 @@ const TalentPage: NextPage<TalentPageProps> = (props) => {
   // todo: make fancier
 
   return (
-    <>
+    <PageContainer>
       <TalentHeader
+        id={talent.id}
         accent={`#${talent.accent_color}`}
         background={
           'https://pbs.twimg.com/profile_banners/1146614554064912384/1612653823/1500x500'
@@ -37,7 +39,7 @@ const TalentPage: NextPage<TalentPageProps> = (props) => {
           type: 'base',
         }}
       />
-    </>
+    </PageContainer>
   )
 }
 
@@ -54,7 +56,7 @@ export const getServerSideProps: GetServerSideProps<TalentPageProps> = async (
 
   console.log(q)
 
-  if (!q.data.length)
+  if (!q.data?.length)
     return {
       notFound: true,
     }

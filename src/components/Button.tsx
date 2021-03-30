@@ -4,7 +4,10 @@ import { default as NextLink } from 'next/link'
 
 interface IButtonBaseProps {
   transparent?: boolean
-  textColor?: string
+  color?: string
+
+  square?: boolean | number
+  round?: boolean
 }
 
 interface IButtonProps {
@@ -14,31 +17,37 @@ interface IButtonProps {
 
 interface IButtonLinkProps {
   href?: string
+	as?: string
 }
 
 export type ButtonProps = IButtonBaseProps & (IButtonProps | IButtonLinkProps)
+export type IconButtonProps = IButtonBaseProps & (IButtonProps | IButtonLinkProps)
 
 export const Button: FC<ButtonProps> = (_props) => {
   const props: PropsWithChildren<
     IButtonBaseProps & IButtonProps & IButtonLinkProps
   > = _props
-  const { transparent, accent, textColor } = props
+  const { transparent, accent, color, round, square } = props
+
+	console.log({ accent })
 
   const componentProps = {
     link: transparent ?? !!props.href,
-    color: textColor,
+    color: color,
     accent,
+    round,
+    square: square === true ? 48 : +square
   }
 
   if (props.href)
     return (
-      <NextLink href={props.href} passHref>
-        <StyledLink {...componentProps}>{props.children}</StyledLink>
+      <NextLink href={props.href} as={props.as} passHref>
+        <StyledButton as="a" {...componentProps}>{props.children}</StyledButton>
       </NextLink>
     )
   else
     return (
-      <StyledButton {...componentProps} onClick={props.onClick}>
+      <StyledButton as="button" {...componentProps} onClick={props.onClick}>
         {props.children}
       </StyledButton>
     )
@@ -48,15 +57,22 @@ interface StyledButtonProps {
   link: boolean
   color: string
   accent: string
+
+  round?: boolean
+  square?: number
 }
 
-const ButtonStyle = css<StyledButtonProps>`
+const StyledButton = styled.button<StyledButtonProps>`
   display: inline-flex;
   flex: 0;
+	justify-content: center;
+	align-items: center;
 
-  padding: 7px 17px;
+	white-space: nowrap;
+
+  padding: ${(props) => (props.link ? '7px 20px' : '7px 17px')};
   text-decoration: none;
-  border-radius: 5px;
+  border-radius: ${props => props.round ? 17 : 5}px;
 
   font: inherit;
   font-weight: 600;
@@ -70,6 +86,13 @@ const ButtonStyle = css<StyledButtonProps>`
   border: none;
   cursor: pointer;
 
+  ${(props) => props.square ? css`
+    padding: 7px;
+
+    height: ${props.square}px;
+    width: ${props.square}px;
+  ` : ``}
+
   &:hover,
   &:focus {
     ${(props) =>
@@ -79,12 +102,4 @@ const ButtonStyle = css<StyledButtonProps>`
           `
         : ''}
   }
-`
-
-const StyledLink = styled.a<StyledButtonProps>`
-  ${ButtonStyle}
-`
-
-const StyledButton = styled.button<StyledButtonProps>`
-  ${ButtonStyle}
 `

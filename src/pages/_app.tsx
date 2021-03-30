@@ -26,6 +26,10 @@ body {
   color: white;
   background-color: #1a1a1a;
 }
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 `
 
 export default AppComponent
